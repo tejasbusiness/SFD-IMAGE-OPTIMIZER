@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sfd Image Optimizer - SynergyFirst Digital</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="logo">
+                    <div class="logo-img-wrapper">
+                        <img src="logo.jpg" alt="SynergyFirst Digital" class="brand-logo">
+                    </div>
+                    <h1>Sfd Image<br>Optimizer</h1>
+                </div>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Theme">
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <i data-lucide="sun" class="sun-icon"></i>
+                </button>
+            </div>
+            <p>Optimize, resize, and compress your images with studio-grade quality.</p>
+        </header>
+
+        <!-- Step 1: Upload (Home Stage) -->
+        <section id="step-upload" class="stage-active">
+            <div id="drop-zone" class="upload-card">
+                <input type="file" id="file-input" multiple accept="image/*" hidden>
+                <div class="upload-content">
+                    <i data-lucide="cloud-upload" class="upload-icon"></i>
+                    <h2>Push to Optimize</h2>
+                    <p>Drop up to 5 images here or <strong>browse files</strong></p>
+                    <span class="upload-meta">Supports JPG, PNG, WebP, TIFF (Max 20MB/file)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 2: Configuration (Editor Stage) -->
+        <section id="step-config">
+            <div class="stage-header">
+                <h2>Configure Transformation</h2>
+            </div>
+            <div id="config-list" class="config-grid">
+                <!-- Config cards will be injected here -->
+            </div>
+        </section>
+
+        <!-- Step 3: Results -->
+        <section id="step-results">
+            <div class="stage-header">
+                <h2>Optimization Complete</h2>
+                <div class="results-header-actions">
+                    <a href="#" id="download-zip" class="primary-btn glow-btn">
+                        <i data-lucide="zip"></i> Download All as ZIP
+                    </a>
+                    <button id="start-again-btn" class="secondary-btn">
+                        <i data-lucide="refresh-cw"></i> Start Again
+                    </button>
+                </div>
+            </div>
+            <div id="results-list" class="results-list">
+                <!-- Result cards will be injected here -->
+            </div>
+            <div class="results-footer">
+                <div id="batch-summary">
+                    Optimized <strong>0</strong> images. Saved <strong>0%</strong> in total.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Sticky Footer Bar (Global Actions for Config Step) -->
+    <div id="global-footer-bar" class="batch-footer" style="display: none;">
+        <div class="progress-container">
+            <div id="upload-progress" class="progress-fill"></div>
+        </div>
+        <div class="footer-container">
+            <div class="control-item">
+                <label>Output Format</label>
+                <select id="global-format">
+                    <option value="webp">WebP (Optimized)</option>
+                    <option value="jpeg">JPEG (Standard)</option>
+                    <option value="png">PNG (Lossless)</option>
+                    <option value="tiff">TIFF (Professional)</option>
+                </select>
+            </div>
+            <div class="control-item">
+                <label>Quality: <span id="global-quality-val">80%</span></label>
+                <input type="range" id="global-quality" min="10" max="100" value="80">
+            </div>
+            <button id="optimize-btn" class="primary-btn success-btn glow-btn">
+                <i data-lucide="zap"></i> Optimize All
+            </button>
+        </div>
+    </div>
+
+    <!-- Cropper Modal -->
+    <div id="crop-modal" class="modal-overlay" style="display:none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Crop Image</h3>
+                <p>Adjust the focus area for your image.</p>
+            </div>
+            <div id="crop-workspace">
+                <img id="crop-target" src="">
+            </div>
+            <div class="ratio-bar">
+                <button class="ratio-btn active" data-ratio="NaN">Free</button>
+                <button class="ratio-btn" data-ratio="1">1:1</button>
+                <button class="ratio-btn" data-ratio="1.7777777777777777">16:9</button>
+                <button class="ratio-btn" data-ratio="1.3333333333333333">4:3</button>
+                <button class="ratio-btn" data-ratio="0.6666666666666666">2:3</button>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-crop" class="secondary-btn">Cancel</button>
+                <button id="apply-crop" class="primary-btn">Apply Crop</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
