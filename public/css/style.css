@@ -372,6 +372,74 @@ section.stage-active {
 
 .stage-header {
     margin: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Sync Resize Toggle */
+.sync-toggle-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.sync-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sync-toggle span {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-light);
+    transition: color 0.3s;
+}
+
+.sync-toggle:has(input:checked) span {
+    color: var(--primary);
+}
+
+.toggle-track {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    background: var(--border);
+    border-radius: 100px;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.toggle-track input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-track input:checked + .toggle-thumb {
+    transform: translateX(22px);
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+}
+
+.toggle-track:has(input:checked) {
+    background: var(--primary);
 }
 
 @keyframes fadeIn {

@@ -6,6 +6,7 @@
 class App {
     constructor() {
         this.files = []; // Array of { id, file, settings, metadata, previewUrl }
+        this.syncResize = false;
         this.activeCropFileId = null;
         this.cropper = null;
         this.currentStage = 'upload'; // upload, config, results
@@ -66,6 +67,12 @@ class App {
         });
 
         startAgainBtn.addEventListener('click', () => window.location.reload());
+
+        // Sync Resize Toggle
+        const syncToggle = document.getElementById('sync-resize-toggle');
+        syncToggle.addEventListener('change', (e) => {
+            this.syncResize = e.target.checked;
+        });
 
         // Modal Events
         document.getElementById('cancel-crop').addEventListener('click', () => this.closeCropModal());
@@ -239,32 +246,74 @@ class App {
     }
 
     updateResizeType(id, type) {
-        const file = this.files.find(f => f.id === id);
-        file.settings.resize.type = type;
+        if (this.syncResize) {
+            this.files.forEach(f => { f.settings.resize.type = type; });
+        } else {
+            const file = this.files.find(f => f.id === id);
+            file.settings.resize.type = type;
+        }
         this.renderConfigCards();
     }
 
     updateResizeVal(id, key, val) {
-        const file = this.files.find(f => f.id === id);
         const v = parseInt(val) || 0;
+        const filesToUpdate = this.syncResize ? this.files : [this.files.find(f => f.id === id)];
 
-        if (key === 'percentage') {
-            file.settings.resize.percentage = v;
-            const scale = v / 100;
-            const nw = Math.round(file.metadata.width * scale);
-            const nh = Math.round(file.metadata.height * scale);
-            document.getElementById(`new-dims-${id}`).innerHTML = `${nw} &times; ${nh}px`;
-        } else if (key === 'width') {
-            file.settings.resize.width = v;
-            const ratio = file.metadata.height / file.metadata.width;
-            file.settings.resize.height = Math.round(v * ratio);
-            this.renderConfigCards(); // Re-render to update the height input
-        } else if (key === 'height') {
-            file.settings.resize.height = v;
-            const ratio = file.metadata.width / file.metadata.height;
-            file.settings.resize.width = Math.round(v * ratio);
-            this.renderConfigCards();
-        }
+        filesToUpdate.forEach(file => {
+            const isCurrentCard = file.id === id;
+
+            if (key === 'percentage') {
+                file.settings.resize.percentage = v;
+                const scale = v / 100;
+                const nw = Math.round(file.metadata.width * scale);
+                const nh = Math.round(file.metadata.height * scale);
+                const dimsEl = document.getElementById(`new-dims-${file.id}`);
+                if (dimsEl) dimsEl.innerHTML = `${nw} &times; ${nh}px`;
+
+                // Update other cards' percentage input without re-rendering
+                if (!isCurrentCard) {
+                    const card = document.querySelector(`.file-config-card[data-id="${file.id}"]`);
+                    if (card) {
+                        const pctInput = card.querySelector('.horizontal-controls .mini-group input[type="number"]');
+                        if (pctInput) pctInput.value = v;
+                    }
+                }
+            } else if (key === 'width') {
+                file.settings.resize.width = v;
+                const ratio = file.metadata.height / file.metadata.width;
+                file.settings.resize.height = Math.round(v * ratio);
+                const dimsEl = document.getElementById(`new-dims-${file.id}`);
+                if (dimsEl) dimsEl.innerHTML = `${v} &times; ${file.settings.resize.height}px`;
+
+                // Update height input directly (and width for synced cards)
+                const card = document.querySelector(`.file-config-card[data-id="${file.id}"]`);
+                if (card) {
+                    const heightInput = card.querySelector('.dim-row-v2 .mini-group:last-child input');
+                    if (heightInput) heightInput.value = file.settings.resize.height;
+                    if (!isCurrentCard) {
+                        const widthInput = card.querySelector('.dim-row-v2 .mini-group:first-child input');
+                        if (widthInput) widthInput.value = v;
+                    }
+                }
+            } else if (key === 'height') {
+                file.settings.resize.height = v;
+                const ratio = file.metadata.width / file.metadata.height;
+                file.settings.resize.width = Math.round(v * ratio);
+                const dimsEl = document.getElementById(`new-dims-${file.id}`);
+                if (dimsEl) dimsEl.innerHTML = `${file.settings.resize.width} &times; ${v}px`;
+
+                // Update width input directly (and height for synced cards)
+                const card = document.querySelector(`.file-config-card[data-id="${file.id}"]`);
+                if (card) {
+                    const widthInput = card.querySelector('.dim-row-v2 .mini-group:first-child input');
+                    if (widthInput) widthInput.value = file.settings.resize.width;
+                    if (!isCurrentCard) {
+                        const heightInput = card.querySelector('.dim-row-v2 .mini-group:last-child input');
+                        if (heightInput) heightInput.value = v;
+                    }
+                }
+            }
+        });
     }
 
     // Modal Logic
