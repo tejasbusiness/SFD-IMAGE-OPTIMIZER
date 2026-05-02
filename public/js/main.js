@@ -84,7 +84,7 @@ class App {
     async handleFiles(fileList) {
         if (!fileList.length) return;
 
-        const incoming = Array.from(fileList).slice(0, 5 - this.files.length);
+        const incoming = Array.from(fileList).slice(0, 10 - this.files.length);
         
         for (const file of incoming) {
             const id = Math.random().toString(36).substring(2, 9);

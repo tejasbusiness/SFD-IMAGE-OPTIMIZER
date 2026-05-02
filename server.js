@@ -24,7 +24,7 @@ const upload = multer({
     storage: storage,
     limits: {
         fileSize: 20 * 1024 * 1024, // 20MB limit
-        files: 5 // Max 5 images
+        files: 10 // Max 10 images
     },
     fileFilter: (req, file, cb) => {
         const allowedTypes = [
@@ -37,7 +37,7 @@ const upload = multer({
             cb(new Error(`Unsupported file type: ${file.mimetype}`));
         }
     }
-}).array('images', 5);
+}).array('images', 10);
 
 app.use(express.json());
 app.use(express.static('public'));
