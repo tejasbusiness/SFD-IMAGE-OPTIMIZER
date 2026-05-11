@@ -4,8 +4,8 @@ uploads/*
 *.zip
 .git
 .gitignore
-README.md
-deployment_guide.md
+.env
+.claude
 *.jpg
 *.png
 *.jpeg

@@ -1,5 +1,5 @@
 /**
- * Sfd Image Optimizer - Client Engine
+ * Image Optimizer - Client Engine
  * Handles UI state, file staging, and API orchestration.
  */
 
@@ -77,7 +77,7 @@ class App {
         // Modal Events
         document.getElementById('cancel-crop').addEventListener('click', () => this.closeCropModal());
         document.getElementById('apply-crop').addEventListener('click', () => this.applyCrop());
-        
+
         document.querySelectorAll('.ratio-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
@@ -92,7 +92,7 @@ class App {
         if (!fileList.length) return;
 
         const incoming = Array.from(fileList).slice(0, 10 - this.files.length);
-        
+
         for (const file of incoming) {
             const id = Math.random().toString(36).substring(2, 9);
             const previewUrl = URL.createObjectURL(file);
@@ -127,10 +127,10 @@ class App {
         this.currentStage = stage;
         document.querySelectorAll('section').forEach(s => s.classList.remove('stage-active'));
         document.getElementById(`step-${stage}`).classList.add('stage-active');
-        
+
         const footerBar = document.getElementById('global-footer-bar');
         footerBar.style.display = stage === 'config' ? 'block' : 'none';
-        
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -142,7 +142,7 @@ class App {
             const card = document.createElement('div');
             card.className = 'file-config-card';
             card.dataset.id = fileData.id;
-            
+
             card.innerHTML = `
                 <button class="remove-file-btn" onclick="app.removeFile('${fileData.id}')">
                     <i data-lucide="x"></i>
@@ -226,7 +226,7 @@ class App {
             `;
             container.appendChild(card);
         });
-        
+
         lucide.createIcons();
     }
 
@@ -322,12 +322,12 @@ class App {
         this.activeCropFileId = id;
         const modal = document.getElementById('crop-modal');
         const img = document.getElementById('crop-target');
-        
+
         img.src = file.previewUrl;
         modal.style.display = 'flex';
 
         if (this.cropper) this.cropper.destroy();
-        
+
         this.cropper = new Cropper(img, {
             viewMode: 1,
             autoCropArea: 0.8,
@@ -352,7 +352,7 @@ class App {
     applyCrop() {
         const data = this.cropper.getData();
         const file = this.files.find(f => f.id === this.activeCropFileId);
-        
+
         file.settings.crop = {
             x: data.x,
             y: data.y,
@@ -360,7 +360,7 @@ class App {
             height: data.height,
             data: data // Save full state for re-editing
         };
-        
+
         this.closeCropModal();
         this.renderConfigCards();
     }
@@ -378,7 +378,7 @@ class App {
         progressFill.style.width = '10%';
 
         const formData = new FormData();
-        
+
         // Global Settings
         formData.append('settings', JSON.stringify({ format, quality }));
 
@@ -403,7 +403,7 @@ class App {
 
             progressFill.style.width = '80%';
             const data = await response.json();
-            
+
             if (data.results) {
                 this.renderResults(data.results, data.errors);
                 this.transitionTo('results');
@@ -424,16 +424,16 @@ class App {
     renderResults(results, errors) {
         const container = document.getElementById('results-list');
         container.innerHTML = '';
-        
+
         let totalOriginal = 0;
         let totalOptimized = 0;
 
         results.forEach(res => {
             totalOriginal += res.originalSize;
             totalOptimized += res.optimizedSize;
-            
+
             const savings = Math.max(0, ((res.originalSize - res.optimizedSize) / res.originalSize) * 100);
-            
+
             const card = document.createElement('div');
             card.className = 'result-card';
             card.innerHTML = `
@@ -493,27 +493,27 @@ class App {
         document.querySelectorAll('select:not(#file-input)').forEach(select => {
             const container = document.createElement('div');
             container.className = 'custom-select-container';
-            
+
             const trigger = document.createElement('div');
             trigger.className = 'custom-select-trigger';
             trigger.textContent = select.options[select.selectedIndex].text;
-            
+
             const options = document.createElement('div');
             options.className = 'custom-select-options';
-            
+
             Array.from(select.options).forEach((opt, idx) => {
                 const o = document.createElement('div');
                 o.className = `custom-select-option ${idx === select.selectedIndex ? 'selected' : ''}`;
                 o.textContent = opt.text;
                 o.dataset.value = opt.value;
-                
+
                 o.addEventListener('click', () => {
                     select.value = opt.value;
                     trigger.textContent = opt.text;
                     options.querySelectorAll('.custom-select-option').forEach(el => el.classList.remove('selected'));
                     o.classList.add('selected');
                     container.classList.remove('open');
-                    
+
                     // Trigger native change event
                     select.dispatchEvent(new Event('change'));
                 });

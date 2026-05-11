@@ -14,7 +14,10 @@
   "type": "commonjs",
   "dependencies": {
     "archiver": "^7.0.1",
+    "compression": "^1.7.5",
+    "dotenv": "^16.5.0",
     "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
     "fs-extra": "^11.3.3",
     "multer": "^2.0.2",
     "sharp": "^0.34.5"
