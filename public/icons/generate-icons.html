@@ -1,24 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Generate PWA Icons</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; background: #f8fafc; }
-    h1 { margin-bottom: 1rem; }
-    .canvases { display: flex; gap: 2rem; flex-wrap: wrap; }
-    .icon-group { text-align: center; }
-    canvas { border: 1px solid #e2e8f0; border-radius: 12px; display: block; margin-bottom: 0.5rem; }
-    button { margin-top: 0.5rem; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
-    p { margin-bottom: 1rem; color: #64748b; }
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background: #f8fafc;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    .canvases {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .icon-group {
+      text-align: center;
+    }
+
+    canvas {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    button {
+      margin-top: 0.5rem;
+      padding: 8px 16px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #64748b;
+    }
   </style>
 </head>
+
 <body>
   <h1>PWA Icon Generator</h1>
   <p>
     Open this file in a browser (from the /public/icons/ folder), then click each "Download" button
     to save the PNG icons. Place them in this <code>/public/icons/</code> folder.
-    You need: icon-192.png, icon-512.png, icon-maskable-192.png, icon-maskable-512.png.
+    You need: icon-192.png, icon-512.png, icon-maskable-192.png, icon-maskable-512.png..
   </p>
   <div class="canvases">
     <div class="icon-group">
@@ -195,4 +232,5 @@
     drawIcon(document.getElementById('cm512'), 512, true);
   </script>
 </body>
+
 </html>
