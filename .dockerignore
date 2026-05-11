@@ -1,0 +1,11 @@
+node_modules
+uploads/*
+!uploads/.gitkeep
+*.zip
+.git
+.gitignore
+README.md
+deployment_guide.md
+*.jpg
+*.png
+*.jpeg
