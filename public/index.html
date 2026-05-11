@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Optimizer - Smart Automation for Business</title>
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Image Optimizer">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <link rel="stylesheet" href="css/style.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -143,6 +150,50 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/pwa.js"></script>
+
+    <!-- PWA Install Prompt (Android / Desktop Chrome) -->
+    <div class="pwa-prompt" id="pwaInstallPrompt" role="dialog" aria-modal="true" aria-labelledby="pwaPromptTitle" aria-hidden="true">
+      <div class="pwa-backdrop" id="pwaInstallBackdrop"></div>
+      <div class="pwa-card">
+        <div class="pwa-app-icon">
+          <img src="/logo.jpg" alt="Image Optimizer">
+        </div>
+        <div class="pwa-body">
+          <p class="pwa-title" id="pwaPromptTitle">Add to Home Screen</p>
+          <p class="pwa-desc">Install Image Optimizer for instant access — no browser needed, works offline.</p>
+          <div class="pwa-actions">
+            <button class="pwa-btn pwa-btn-yes" id="pwaInstallYes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              Install App
+            </button>
+            <button class="pwa-btn pwa-btn-no" id="pwaInstallNo">Not now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PWA Install Prompt (iOS Safari — manual instructions) -->
+    <div class="pwa-prompt pwa-ios" id="pwaIOSPrompt" role="dialog" aria-modal="true" aria-labelledby="pwaIOSTitle" aria-hidden="true">
+      <div class="pwa-backdrop" id="pwaIOSBackdrop"></div>
+      <div class="pwa-card pwa-ios-card">
+        <div class="pwa-app-icon">
+          <img src="/logo.jpg" alt="Image Optimizer">
+        </div>
+        <div class="pwa-body">
+          <p class="pwa-title" id="pwaIOSTitle">Add to Home Screen</p>
+          <p class="pwa-desc">
+            Tap
+            <svg class="pwa-share-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            then <strong>"Add to Home Screen"</strong> to install this app.
+          </p>
+          <div class="pwa-actions">
+            <button class="pwa-btn pwa-btn-no" id="pwaIOSDismiss">Got it</button>
+          </div>
+        </div>
+        <div class="pwa-ios-arrow"></div>
+      </div>
+    </div>
 </body>
 
 </html>

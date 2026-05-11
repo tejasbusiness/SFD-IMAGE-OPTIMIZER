@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate PWA Icons</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f8fafc; }
+    h1 { margin-bottom: 1rem; }
+    .canvases { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .icon-group { text-align: center; }
+    canvas { border: 1px solid #e2e8f0; border-radius: 12px; display: block; margin-bottom: 0.5rem; }
+    button { margin-top: 0.5rem; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+    p { margin-bottom: 1rem; color: #64748b; }
+  </style>
+</head>
+<body>
+  <h1>PWA Icon Generator</h1>
+  <p>
+    Open this file in a browser (from the /public/icons/ folder), then click each "Download" button
+    to save the PNG icons. Place them in this <code>/public/icons/</code> folder.
+    You need: icon-192.png, icon-512.png, icon-maskable-192.png, icon-maskable-512.png.
+  </p>
+  <div class="canvases">
+    <div class="icon-group">
+      <canvas id="c192" width="192" height="192"></canvas>
+      <div>icon-192.png</div>
+      <button onclick="download('c192','icon-192.png')">Download</button>
+    </div>
+    <div class="icon-group">
+      <canvas id="c512" width="512" height="512"></canvas>
+      <div>icon-512.png</div>
+      <button onclick="download('c512','icon-512.png')">Download</button>
+    </div>
+    <div class="icon-group">
+      <canvas id="cm192" width="192" height="192"></canvas>
+      <div>icon-maskable-192.png (safe zone)</div>
+      <button onclick="download('cm192','icon-maskable-192.png')">Download</button>
+    </div>
+    <div class="icon-group">
+      <canvas id="cm512" width="512" height="512"></canvas>
+      <div>icon-maskable-512.png (safe zone)</div>
+      <button onclick="download('cm512','icon-maskable-512.png')">Download</button>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvas, size, maskable) {
+      const ctx = canvas.getContext('2d');
+      const r = size;
+
+      // Background
+      if (maskable) {
+        // Full bleed for maskable icons
+        const grad = ctx.createLinearGradient(0, 0, r, r);
+        grad.addColorStop(0, '#3b82f6');
+        grad.addColorStop(1, '#1d4ed8');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, r, r);
+      } else {
+        // Rounded rect for standard icons
+        const radius = r * 0.22;
+        const grad = ctx.createLinearGradient(0, 0, r, r);
+        grad.addColorStop(0, '#3b82f6');
+        grad.addColorStop(1, '#1d4ed8');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(radius, 0);
+        ctx.lineTo(r - radius, 0);
+        ctx.quadraticCurveTo(r, 0, r, radius);
+        ctx.lineTo(r, r - radius);
+        ctx.quadraticCurveTo(r, r, r - radius, r);
+        ctx.lineTo(radius, r);
+        ctx.quadraticCurveTo(0, r, 0, r - radius);
+        ctx.lineTo(0, radius);
+        ctx.quadraticCurveTo(0, 0, radius, 0);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Safe zone inset for maskable (40% minimum safe zone → 30% padding on each side)
+      const inset = maskable ? r * 0.18 : r * 0.12;
+      const s = r - inset * 2; // drawing area size
+      const ox = inset;
+      const oy = inset;
+
+      ctx.save();
+      ctx.translate(ox, oy);
+
+      // Image frame
+      const fw = s;
+      const fh = s * 0.72;
+      const fy = s * 0.08;
+      const frameRadius = s * 0.1;
+
+      ctx.beginPath();
+      roundRect(ctx, 0, fy, fw, fh, frameRadius);
+      ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+      ctx.lineWidth = s * 0.04;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.fill();
+
+      // Mountain silhouette inside frame
+      ctx.save();
+      ctx.beginPath();
+      roundRect(ctx, 0, fy, fw, fh, frameRadius);
+      ctx.clip();
+
+      ctx.beginPath();
+      ctx.moveTo(fw * 0.05, fy + fh);
+      ctx.lineTo(fw * 0.35, fy + fh * 0.35);
+      ctx.lineTo(fw * 0.52, fy + fh * 0.6);
+      ctx.lineTo(fw * 0.68, fy + fh * 0.22);
+      ctx.lineTo(fw * 0.95, fy + fh);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255,255,255,0.65)';
+      ctx.fill();
+      ctx.restore();
+
+      // Sun circle
+      ctx.beginPath();
+      ctx.arc(fw * 0.8, fy + fh * 0.25, s * 0.09, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fill();
+
+      // Compress arrows (below frame)
+      const arrowY = fy + fh + s * 0.13;
+      const arrowLen = s * 0.22;
+      const midX = fw / 2;
+      const gap = s * 0.06;
+      const lw = s * 0.045;
+      const ah = s * 0.07; // arrowhead size
+
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = lw;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Left arrow → pointing right (compress inward)
+      ctx.beginPath();
+      ctx.moveTo(midX - gap - arrowLen, arrowY);
+      ctx.lineTo(midX - gap, arrowY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(midX - gap - ah, arrowY - ah * 0.7);
+      ctx.lineTo(midX - gap, arrowY);
+      ctx.lineTo(midX - gap - ah, arrowY + ah * 0.7);
+      ctx.stroke();
+
+      // Right arrow ← pointing left (compress inward)
+      ctx.beginPath();
+      ctx.moveTo(midX + gap, arrowY);
+      ctx.lineTo(midX + gap + arrowLen, arrowY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(midX + gap + ah, arrowY - ah * 0.7);
+      ctx.lineTo(midX + gap, arrowY);
+      ctx.lineTo(midX + gap + ah, arrowY + ah * 0.7);
+      ctx.stroke();
+
+      // Center dot
+      ctx.beginPath();
+      ctx.arc(midX, arrowY, lw * 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const a = document.createElement('a');
+      a.download = filename;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    }
+
+    drawIcon(document.getElementById('c192'), 192, false);
+    drawIcon(document.getElementById('c512'), 512, false);
+    drawIcon(document.getElementById('cm192'), 192, true);
+    drawIcon(document.getElementById('cm512'), 512, true);
+  </script>
+</body>
+</html>
